@@ -160,7 +160,7 @@ class _Home_ScreenState extends State<Home_Screen> {
           backgroundColor: Theme
               .of(context)
               .colorScheme
-              .secondary,
+              .onSecondary,
           child: Icon(
             Icons.add,color: Theme
               .of(context)

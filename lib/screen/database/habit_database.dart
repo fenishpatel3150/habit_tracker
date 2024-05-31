@@ -62,34 +62,39 @@ class HabitDatabase extends ChangeNotifier {
   }
 
   //UPDATE = CHECK HABIT ON AND OFF
-  Future<void> updateHabitCompletion(int id, bool iscompleted) async {
-    //find the specific habit
+  Future<void> updateHabitCompletion(int id, bool isCompleted) async {
+    // find the specific habit
     final habit = await isar.habits.get(id);
-    //update completion status
+
+    // update completion status
     if (habit != null) {
       await isar.writeTxn(() async {
         // if habit is completed -> add the current date to the completedDays list
-        if (iscompleted && !habit.completedDays.contains(DateTime.now())) {
-          //today
+        if (isCompleted && !habit.completedDays.contains(DateTime.now())) {
+          // today
           final today = DateTime.now();
-          //add the current date if it's not already in the list
+
+          // add the current date if it's not already in the list
           habit.completedDays.add(DateTime(today.year, today.month, today.day));
         }
-        //if habit is NOT completed -> remove the current date from the list
+
+        // if habit is NOT completed -> remove the current date from the list
         else {
           // remove the current date if the habit is marked as not completed
           habit.completedDays.removeWhere((date) =>
-              date.year == DateTime.now().year &&
-              date.year == DateTime.now().month &&
-              date.year == DateTime.now().day);
+          date.year == DateTime.now().year &&
+              date.month == DateTime.now().month &&
+              date.day == DateTime.now().day);
         }
-        // save the updated habit back to the db
+
+        // save the updated habits back to the db
         await isar.habits.put(habit);
       });
     }
     // re-read from db
     readHabits();
   }
+
 
 //UPDATE  = EDIT HABIT NAME
   Future<void> updateHabitName(int id, String newName) async {
